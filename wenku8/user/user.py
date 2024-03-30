@@ -1,11 +1,13 @@
 import wenku8.data
 import data
 import requests
+from typing import Any
 
 
 class User:
     username = ''
     password = ''
+    email = ''
 
     def __init__(self, username, password):
         self.username = username
@@ -38,12 +40,72 @@ class User:
         # print(cookies)
         return cookies
 
+    def register_info(self, email):
+        self.email = email
 
-    def register(self):
-        pass
+    def register(self) -> dict:
+        """
 
+        :return json{
+            status
+            info
+        }:
+        """
+        res = {
+            "status": False,
+            "info": "未知错误"
+        }
+        # 检查用户名
+        register_username_check_url = wenku8.data.url + data.username_check
+        register_username_check_url = register_username_check_url.format(self.username)
+        response = requests.get(
+            url=register_username_check_url,
+            headers=wenku8.data.header,
+            timeout=10
+        )
+        if response.text.find('已注册') != -1:
+            res["info"] = "该用户名已被注册"
+            return res
+        # 检查邮箱
+        if self.email == '':
+            res["info"] = "email未填写"
+            return res
+        register_email_check_url = wenku8.data.url + data.email_check
+        register_email_check_url = register_email_check_url.format(self.email)
+        response = requests.get(
+            url=register_username_check_url,
+            headers=wenku8.data.header,
+            timeout=10
+        )
+        if response.text.find('格式错误') != -1:
+            res["info"] = "email格式错误"
+            return res
+        # 注册
+        register_url = wenku8.data.url + data.register_path
+        response = requests.post(
+            url=register_url,
+            data={
+                'username': self.username,
+                'password': self.password,
+                'repassword': self.password,
+                'email': self.email,
+                'sex': 0,
+                "qq": "",
+                "url": "",
+                "action": "newuser",
+                'submit': "%CC%E1+%BD%BB"
+            },
+            headers=wenku8.data.header
+        )
+        with open('res.html', 'wb') as f:
+            f.write(response.content)
+        if response.text.find('成功'):
+            res["info"] = "注册成功"
+            res["status"] = True
+        return res
 
 
 if __name__ == '__main__':
-    user = User('mqnu', '0117mqnu')
-    user.login()
+    user = User('mqnu00', '111111')
+    user.register_info('mqnu00@mqnu.com')
+    print(user.register())

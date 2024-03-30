@@ -18,6 +18,13 @@ class User:
         返回用户登录cookies
         :return cookies:
         """
+
+        res = {
+            "status": False,
+            "info": "未知错误",
+            "cookies": ""
+        }
+
         login_url = wenku8.data.url + data.login_path
         cookies = {}
 
@@ -38,7 +45,10 @@ class User:
         for i, j in result.cookies.items():
             cookies[i] = j
         # print(cookies)
-        return cookies
+        res["status"] = True
+        res["info"] = "登录成功"
+        res["cookies"] = cookies
+        return res
 
     def register_info(self, email):
         self.email = email
@@ -97,8 +107,6 @@ class User:
             },
             headers=wenku8.data.header
         )
-        with open('res.html', 'wb') as f:
-            f.write(response.content)
         if response.text.find('成功'):
             res["info"] = "注册成功"
             res["status"] = True
@@ -106,6 +114,6 @@ class User:
 
 
 if __name__ == '__main__':
-    user = User('mqnu00', '111111')
-    user.register_info('mqnu00@mqnu.com')
-    print(user.register())
+    user = User('mqnu000', '111111')
+    user.register_info('mqnu000@mqnu.com')
+    print(user.login())

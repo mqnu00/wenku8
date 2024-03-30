@@ -1,5 +1,5 @@
 import wenku8.data
-import data
+from wenku8.user import data
 import requests
 from typing import Any
 
@@ -42,6 +42,15 @@ class User:
         )
         # result.encoding = 'gbk'
         # print(result.text)
+        with open('res.html', 'wb') as f:
+            f.write(result.content)
+        text = result.text.encode('iso-8859-1').decode('gbk')
+        if text.find('该用户不存在') != -1:
+            res["info"] = "该用户不存在"
+            return res
+        if text.find("错误") != -1:
+            res["info"] = "密码错误"
+            return res
         for i, j in result.cookies.items():
             cookies[i] = j
         # print(cookies)
@@ -83,12 +92,15 @@ class User:
         register_email_check_url = wenku8.data.url + data.email_check
         register_email_check_url = register_email_check_url.format(self.email)
         response = requests.get(
-            url=register_username_check_url,
+            url=register_email_check_url,
             headers=wenku8.data.header,
             timeout=10
         )
         if response.text.find('格式错误') != -1:
             res["info"] = "email格式错误"
+            return res
+        if response.text.find('已注册') != -1:
+            res["info"] = "email已被注册"
             return res
         # 注册
         register_url = wenku8.data.url + data.register_path
@@ -107,13 +119,16 @@ class User:
             },
             headers=wenku8.data.header
         )
-        if response.text.find('成功'):
+        text = response.text.encode('iso-8859-1').decode('gbk')
+        # print(text)
+        if text.find('成功') != -1:
             res["info"] = "注册成功"
             res["status"] = True
         return res
 
 
 if __name__ == '__main__':
-    user = User('mqnu000', '111111')
+    # mqnu000 111111
+    user = User('mqnu111', '111')
     user.register_info('mqnu000@mqnu.com')
-    print(user.login())
+    print(user.register())

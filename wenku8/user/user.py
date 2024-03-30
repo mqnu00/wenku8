@@ -42,8 +42,6 @@ class User:
         )
         # result.encoding = 'gbk'
         # print(result.text)
-        with open('res.html', 'wb') as f:
-            f.write(result.content)
         text = result.text.encode('iso-8859-1').decode('gbk')
         if text.find('该用户不存在') != -1:
             res["info"] = "该用户不存在"

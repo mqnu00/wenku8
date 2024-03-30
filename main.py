@@ -5,11 +5,18 @@ app = Flask(__name__)
 
 
 @app.route('/login/', methods=['POST'])
-def index():
+def login():
     register_data = request.form
-    print(register_data)
     user = User(register_data['username'], register_data['password'])
     return user.login()
+
+
+@app.route('/register/', methods=['POST'])
+def register():
+    register_data = request.form
+    user = User(register_data['username'], register_data['password'])
+    user.register_info(register_data['email'])
+    return user.register()
 
 
 if __name__ == "__main__":

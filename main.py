@@ -1,5 +1,6 @@
 from flask import Flask, request
 from wenku8.user.user import User
+from wenku8.novel.novel import Novel
 
 app = Flask(__name__)
 
@@ -17,6 +18,13 @@ def register():
     user = User(register_data['username'], register_data['password'])
     user.register_info(register_data['email'])
     return user.register()
+
+
+@app.route('/book/<int:id>/', methods=['GET'])
+def get_novel_info(id):
+    novel = Novel()
+    novel.id = id
+    return novel.get_info()
 
 
 if __name__ == "__main__":

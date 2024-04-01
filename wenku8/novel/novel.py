@@ -33,7 +33,6 @@ class Novel:
             headers=wenku8.data.header,
             timeout=10
         )
-        print(response.status_code)
 
         soup = BeautifulSoup(response.content, 'html.parser')
 
@@ -58,7 +57,7 @@ class Novel:
 
         res["status"] = True
         res["info"] = "获取小说信息成功"
-        res["novel"] = json.dumps(self.__dict__)
+        res["novel"] = json.dumps(self.__dict__, ensure_ascii=False)
 
         return res
 

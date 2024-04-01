@@ -61,7 +61,7 @@ class Novel:
 
         res["status"] = True
         res["info"] = "获取小说信息成功"
-        res["novel"] = json.dumps(self.__dict__, ensure_ascii=False)
+        res["novel"] = self.__dict__
 
         return res
 

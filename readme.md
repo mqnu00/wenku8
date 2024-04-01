@@ -15,7 +15,11 @@
 ```
 url: localhost:5000/register/
 method: post
-data: 通过表单形式提供
+data: 表单{
+	username: 用户名
+	password: 密码
+	email: 邮箱
+}
 
 return: json{
 	status: bool 是否成功
@@ -28,7 +32,10 @@ return: json{
 ```
 url: localhost:5000/login/
 method: post
-data: 通过表单形式提供
+data: 表单{
+	username: 用户名
+	password: 密码
+}
 
 return: json{
 	status: bool 是否成功

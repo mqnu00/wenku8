@@ -45,7 +45,8 @@ catalog: list[	目录列表
 chapter: list[	章节列表
 	json{
 		name: str		章节名
-		link: str		章节链接
+		novel_id: int	小说id
+		chapter_id: int	章节id
 	}
 ]
 ```

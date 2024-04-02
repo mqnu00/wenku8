@@ -3,6 +3,7 @@ from wenku8.novel import data
 import wenku8.data
 from bs4 import BeautifulSoup
 import json
+import re
 
 
 class Novel:
@@ -73,7 +74,8 @@ class Novel:
         }
         chapter = {
             "name": str(),
-            "link": str()
+            "novel_id": int(),
+            "chapter_id": int()
         }
         res = list()
         catalog_url = wenku8.data.url + data.catalog_path
@@ -98,7 +100,8 @@ class Novel:
             elif i.a:
                 chapter = {
                     "name": i.text,
-                    "link": wenku8.data.url + data.chapter_path.format(self.id, i.a.get('href'))
+                    "novel_id": self.id,
+                    "chapter_id": re.findall("\d+", re.findall("\d+.htm", data.chapter_path.format(self.id, i.a.get('href')))[0])[0]
                 }
                 catalog["chapter"].append(chapter)
             else:

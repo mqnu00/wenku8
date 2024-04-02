@@ -101,7 +101,7 @@ class Novel:
                 chapter = {
                     "name": i.text,
                     "novel_id": self.id,
-                    "chapter_id": re.findall("\d+", re.findall("\d+.htm", data.chapter_path.format(self.id, i.a.get('href')))[0])[0]
+                    "chapter_id": re.findall("\d+", i.a.get('href'))[0]
                 }
                 catalog["chapter"].append(chapter)
             else:

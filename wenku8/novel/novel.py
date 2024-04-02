@@ -57,7 +57,7 @@ class Novel:
         self.pic_url = pic_url
 
         # 获取小说目录
-        self.get_catalog()
+        # self.get_catalog()
 
         res["status"] = True
         res["info"] = "获取小说信息成功"
@@ -66,7 +66,7 @@ class Novel:
         return res
 
     # 获取小说目录
-    def get_catalog(self) -> None:
+    def get_catalog(self) -> dict:
         catalog = {
             "volume": str(),
             "chapter": list()
@@ -105,9 +105,11 @@ class Novel:
                 pass
         res.append(catalog)
         self.catalog = res
+        return self.get_info()
 
 
 if __name__ == '__main__':
     novel = Novel()
     novel.id = 1973
-    print(novel.get_info())
+    res = novel.get_catalog()
+    print(res)

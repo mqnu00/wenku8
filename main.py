@@ -27,5 +27,12 @@ def get_novel_info(id):
     return novel.get_info()
 
 
+@app.route('/book/catalog/<int:id>/', methods=['GET'])
+def get_novel_catalog(id):
+    novel = Novel()
+    novel.id = id
+    return novel.get_catalog()
+
+
 if __name__ == "__main__":
     app.run(port=5000, host="127.0.0.1", debug=True)

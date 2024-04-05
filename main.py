@@ -23,15 +23,13 @@ def register():
 
 @app.route('/book/<int:id>/', methods=['GET'])
 def get_novel_info(id):
-    novel = Novel()
-    novel.id = id
+    novel = Novel(id)
     return novel.get_info()
 
 
 @app.route('/book/catalog/<int:id>/', methods=['GET'])
 def get_novel_catalog(id):
-    novel = Novel()
-    novel.id = id
+    novel = Novel(id)
     return novel.get_catalog()
 
 

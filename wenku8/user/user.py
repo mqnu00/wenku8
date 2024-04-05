@@ -8,8 +8,9 @@ class User:
     username = ''
     password = ''
     email = ''
+    cookie = dict()
 
-    def __init__(self, username, password):
+    def __init__(self, username='', password=''):
         self.username = username
         self.password = password
 
@@ -51,10 +52,11 @@ class User:
             return res
         for i, j in result.cookies.items():
             cookies[i] = j
+        self.cookie = cookies
         # print(cookies)
         res["status"] = True
         res["info"] = "登录成功"
-        res["cookies"] = cookies
+        res["user"] = user.__dict__
         return res
 
     def register_info(self, email):

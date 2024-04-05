@@ -14,7 +14,8 @@ class Novel:
     pic_url = str()
     catalog = dict()
 
-    def __init__(self):
+    def __init__(self, id):
+        self.id = id
         pass
 
     def get_info(self) -> dict:
@@ -80,6 +81,7 @@ class Novel:
         res = list()
         catalog_url = wenku8.data.url + data.catalog_path
         catalog_url = catalog_url.format(self.id)
+        print(catalog_url)
         response = requests.get(
             url=catalog_url,
             headers=wenku8.data.header,

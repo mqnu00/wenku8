@@ -151,7 +151,6 @@ class User:
             for i in content:
                 content = [i.strip() for i in i.text.split('\n') if i.strip() != '']
                 break
-            print(content)
             for i, j in zip(content, range(0, len(content))):
                 if i == '用户ID：':
                     self.id = int(content[j + 1])

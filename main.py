@@ -21,6 +21,14 @@ def register():
     return user.register()
 
 
+@app.route('/user/detail', methods=['POST'])
+def userinfo():
+    register_data = request.json
+    user = User()
+    user.cookie = register_data
+    return user.get_user_info()
+
+
 @app.route('/book/<int:id>/', methods=['GET'])
 def get_novel_info(id):
     novel = Novel(id)

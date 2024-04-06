@@ -129,12 +129,7 @@ class User:
             res["status"] = True
         return res
 
-    def get_user_info(self):
-        res = {
-            "status": False,
-            "info": "未知错误",
-            "user": None
-        }
+    def check_cookie(self) -> bool:
         userinfo_url = wenku8.data.url + data.userinfo_path
         response = requests.get(
             url=userinfo_url,
@@ -144,27 +139,45 @@ class User:
             allow_redirects=False
         )
         if response.status_code != 200:
+            return False
+        return True
+
+    def get_user_info(self) -> dict:
+        res = {
+            "status": False,
+            "info": "未知错误",
+            "user": None
+        }
+        if not self.check_cookie():
             res["info"] = "登录失败"
-        else:
-            soup = BeautifulSoup(response.content, 'html.parser')
-            content = soup.find('div', id='centerm')
-            for i in content:
-                content = [i.strip() for i in i.text.split('\n') if i.strip() != '']
-                break
-            for i, j in zip(content, range(0, len(content))):
-                if i == '用户ID：':
-                    self.id = int(content[j + 1])
-                elif i == '用户名：':
-                    self.username = content[j + 1]
-                elif i == '昵称：':
-                    self.nick = content[j + 1]
-                elif i == '性别：':
-                    self.gender_id = [i for i, x in enumerate(self.gender_type) if x == content[j + 1]][0]
-                elif i == '推广链接：':
-                    self.promotion_link = content[j + 1]
-            res["status"] = True
-            res["info"] = "获取用户信息成功"
-            res["user"] = self.__dict__
+            return res
+        userinfo_url = wenku8.data.url + data.userinfo_path
+        response = requests.get(
+            url=userinfo_url,
+            headers=wenku8.data.header,
+            cookies=self.cookie,
+            timeout=10,
+            allow_redirects=False
+        )
+        soup = BeautifulSoup(response.content, 'html.parser')
+        content = soup.find('div', id='centerm')
+        for i in content:
+            content = [i.strip() for i in i.text.split('\n') if i.strip() != '']
+            break
+        for i, j in zip(content, range(0, len(content))):
+            if i == '用户ID：':
+                self.id = int(content[j + 1])
+            elif i == '用户名：':
+                self.username = content[j + 1]
+            elif i == '昵称：':
+                self.nick = content[j + 1]
+            elif i == '性别：':
+                self.gender_id = [i for i, x in enumerate(self.gender_type) if x == content[j + 1]][0]
+            elif i == '推广链接：':
+                self.promotion_link = content[j + 1]
+        res["status"] = True
+        res["info"] = "获取用户信息成功"
+        res["user"] = self.__dict__
 
         return res
 

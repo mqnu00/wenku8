@@ -62,7 +62,7 @@ class User:
         # print(cookies)
         res["status"] = True
         res["info"] = "登录成功"
-        res["user"] = user.__dict__
+        res["user"] = self.__dict__
         return res
 
     def register(self) -> dict:

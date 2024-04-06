@@ -1,7 +1,10 @@
+import json
+
 from flask import Flask, request
 from wenku8.user.user import User
 from wenku8.novel.novel import Novel
 from wenku8.novel.chapter import Chapter
+from wenku8.novel.tolist import TopList
 
 app = Flask(__name__)
 
@@ -21,11 +24,11 @@ def register():
     return user.register()
 
 
-@app.route('/user/detail', methods=['POST'])
+@app.route('/user/detail/', methods=['POST'])
 def userinfo():
-    register_data = request.json
+    cookie = request.json
     user = User()
-    user.cookie = register_data
+    user.cookie = cookie
     return user.get_user_info()
 
 
@@ -43,9 +46,25 @@ def get_novel_catalog(id):
 
 @app.route('/book/<int:novel_id>/<int:chapter_id>/', methods=['GET'])
 def get_novel_chapter(novel_id, chapter_id):
-    print(novel_id, chapter_id)
     chapter = Chapter(novel_id, chapter_id)
     return chapter.get_content()
+
+
+# 返回书籍列表类型
+@app.route('/toplist/type/', methods=['GET'])
+def get_toplist_type():
+    toplist = TopList()
+    return toplist.get_all_list_type()
+
+
+# 返回书籍列表
+@app.route('/toplist/', methods=['POST'])
+def get_toplist():
+    request_data = request.json
+    toplist = TopList()
+    toplist.user.cookie = request_data.get("cookie")
+    toplist.request_page = request_data.get("request_page")
+    return toplist.get_list()
 
 
 if __name__ == "__main__":

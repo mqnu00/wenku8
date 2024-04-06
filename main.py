@@ -17,7 +17,7 @@ def login():
 def register():
     register_data = request.form
     user = User(register_data['username'], register_data['password'])
-    user.register_info(register_data['email'])
+    user.email = register_data['email']
     return user.register()
 
 

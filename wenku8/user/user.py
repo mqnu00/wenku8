@@ -59,9 +59,6 @@ class User:
         res["user"] = user.__dict__
         return res
 
-    def register_info(self, email):
-        self.email = email
-
     def register(self) -> dict:
         """
 

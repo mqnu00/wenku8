@@ -26,18 +26,23 @@ class Novel:
             "novel": None
         }
 
-        if self.id == 0:
-            res["info"] = "小说id缺失"
-
         novel_info_url = wenku8.data.url + data.info_path
         novel_info_url = novel_info_url.format(self.id)
         response = requests.get(
             url=novel_info_url,
             headers=wenku8.data.header,
-            timeout=10
+            timeout=10,
+            allow_redirects=False
         )
 
         soup = BeautifulSoup(response.content, 'html.parser')
+
+        error_tag = soup.find('div', class_='blocktitle')
+        error_tag = error_tag.text
+        if error_tag.find('错误') != -1:
+            error_info = soup.find('div', class_='blockcontent')
+            res["info"] = error_info.text.split('\n')[1]
+            return res
 
         # 获取小说简介
         novel_desc = soup.find_all('span')

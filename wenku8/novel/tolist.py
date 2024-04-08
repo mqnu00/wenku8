@@ -74,7 +74,7 @@ class TopList:
             "novel_list": list()
         }
         for i in self.novel_list:
-            res["novel_list"].append(i)
+            res["novel_list"].append(int(i))
         return res
 
 

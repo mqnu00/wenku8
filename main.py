@@ -63,6 +63,7 @@ def get_toplist():
     request_data = request.json
     toplist = TopList()
     toplist.user.cookie = request_data.get("cookie")
+    toplist.type_id = request_data.get("type_id")
     toplist.request_page = request_data.get("request_page")
     return toplist.get_list()
 

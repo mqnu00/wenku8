@@ -13,6 +13,9 @@ class Novel:
     description = str()
     pic_url = str()
     catalog = dict()
+    status = str()
+    update_time = str()
+    all_length = str()
 
     def __init__(self, id):
         self.id = id
@@ -37,12 +40,25 @@ class Novel:
 
         soup = BeautifulSoup(response.content, 'html.parser')
 
+        # 判断错误
         error_tag = soup.find('div', class_='blocktitle')
         error_tag = error_tag.text
         if error_tag.find('错误') != -1:
             error_info = soup.find('div', class_='blockcontent')
             res["info"] = error_info.text.split('\n')[1]
             return res
+
+        content = soup.find_all('tr')[2]
+        content = [i for i in content.text.split('\n') if i.strip() != '']
+        for i, j in enumerate(content):
+            if i == 2:
+                self.status = j.split('：')[1]
+            elif i == 3:
+                self.update_time = j.split('：')[1]
+            elif i == 4:
+                self.all_length = j.split('：')[1]
+        print(self.__dict__)
+
 
         # 获取小说简介
         novel_desc = soup.find_all('span')

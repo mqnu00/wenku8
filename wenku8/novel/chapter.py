@@ -17,6 +17,11 @@ class Chapter:
         self.chapter_id = chapter_id
 
     def get_content(self):
+        res = {
+            "status": True,
+            "info": "请求成功",
+            "chapter": None
+        }
         chapter_url = wenku8.data.url + data.chapter_path
         chapter_url = chapter_url.format(self.novel_id, self.chapter_id)
         response = requests.get(
@@ -29,7 +34,8 @@ class Chapter:
         self.name = title.text
         content = soup.find('div', id='content')
         self.content = content.text
-        return self.__dict__
+        res["chapter"] = self.__dict__
+        return res
 
 
 if __name__ == '__main__':

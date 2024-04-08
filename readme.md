@@ -7,6 +7,7 @@
 - [x] 用户注册
 - [x] 用户登录
 - [x] 获取小说信息
+- [x] 获取小说章节内容
 - [x] 获取书籍列表
 - [ ] 。。。
 
@@ -39,17 +40,20 @@ novel: json{	小说信息
 catalog: list[	目录列表
 	json{
 		volume: str		卷名
-		chapter: list	章节名
+		chapter: list	list[chapter类] 这里不会返回content
 	}
 ]
+```
 
-chapter: list[	章节列表
-	json{
-		name: str		章节名
-		novel_id: int	小说id
-		chapter_id: int	章节id
-	}
-]
+## Chapter
+
+```
+chapter: {
+    "chapter_id": 69568,
+    "content": "本文来自 轻小说文库",
+    "name": "第一卷 日本的社会结构",
+    "novel_id": 1973
+}
 ```
 
 ## User
@@ -68,9 +72,26 @@ user: json{		用户信息
 }
 ```
 
+## Toplist
+
+```
+toplist: json{				小说列表（json）
+        "novel_list": list[			list 里面包含novel_id(int)
+            2966,
+            3589,
+        ],
+        "request_page": 2,			请求的是第几页
+        "total_page": "38",			请求的列表的总页数
+        "type_id": 3,				请求的列表的类型
+        "type_name": "月推荐榜"		类型的名字
+}
+```
+
 # 接口请求
 
-## 用户注册
+## 用户
+
+### 用户注册
 
 ```
 url: localhost:5000/register/
@@ -87,7 +108,7 @@ return: json{
 }
 ```
 
-## 用户登录
+### 用户登录
 
 ```
 url: localhost:5000/login/
@@ -104,9 +125,11 @@ return: json{
 }
 ```
 
-# 获取小说信息
+## 小说
 
-### 不含目录
+### 小说信息
+
+#### 不含目录
 
 ```
 url: localhost:5000/book/小说id/
@@ -119,7 +142,7 @@ return: json{
 }
 ```
 
-### 含目录
+#### 含目录
 
 ```
 url: localhost:5000/book/catalog/小说id/
@@ -129,6 +152,19 @@ return: json{
 	status: bool	是否成功
 	info: str		描述
 	novel: json		小说实体
+}
+```
+
+### 章节内容
+
+```
+url: localhost:5000/book/小说id/小说章节id/
+method: get
+
+return: json{
+    "chapter": json		chapter类
+    "info": "请求成功",
+    "status": true
 }
 ```
 
@@ -172,20 +208,9 @@ data: json{
 }
 
 return: json{
-	{
-    "info": "获取小说列表成功",		请求信息
-    "status": true,				 请求状态
-    "toplist": json{				小说列表（json）
-        "novel_list": list[			list 里面包含novel_id(int)
-            2966,
-            3589,
-        ],
-        "request_page": 2,			请求的是第几页
-        "total_page": "38",			请求的列表的总页数
-        "type_id": 3,				请求的列表的类型
-        "type_name": "月推荐榜"		类型的名字
-    }
-}
+        "info": "获取小说列表成功",		请求信息
+        "status": true,				 请求状态
+        "toplist": json 			toplist类
 }
 ```
 

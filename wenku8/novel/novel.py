@@ -57,7 +57,6 @@ class Novel:
                 self.update_time = j.split('：')[1]
             elif i == 4:
                 self.all_length = j.split('：')[1]
-        print(self.__dict__)
 
 
         # 获取小说简介

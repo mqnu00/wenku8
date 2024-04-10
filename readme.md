@@ -35,6 +35,9 @@ novel: json{	小说信息
 		id: int,			小说id
 		name: str,			小说名
 		pic_url: str		小说封面
+		all_length: str		小说总字数
+		status: str			小说状态，连载中还是已完结
+		update_time: str	更新时间
 }
 
 catalog: list[	目录列表
@@ -214,3 +217,9 @@ return: json{
 }
 ```
 
+# 请求逻辑
+
+## 获取书籍列表
+
+1. `localhost:5000/book/toplist/`获取到列表内的小说id
+2. `localhost:5000/book/小说id/`获取小说信息

@@ -202,7 +202,7 @@ return: {
 ### 获取书籍列表
 
 ```
-url: localhost:5000/book/toplist/
+url: localhost:5000/toplist/
 method: post
 data: json{
 	cookie: json 		来自user.cookie
@@ -221,5 +221,5 @@ return: json{
 
 ## 获取书籍列表
 
-1. `localhost:5000/book/toplist/`获取到列表内的小说id
+1. `localhost:5000/toplist/`获取到列表内的小说id
 2. `localhost:5000/book/小说id/`获取小说信息

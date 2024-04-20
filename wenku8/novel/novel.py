@@ -1,5 +1,8 @@
+import pprint
+
 import requests
 from wenku8.novel import data
+from wenku8.util.util import encode_base64, xml_to_dict
 import wenku8.data
 from bs4 import BeautifulSoup
 import json
@@ -16,10 +19,17 @@ class Novel:
     status = str()
     update_time = str()
     all_length = str()
+    # 每日点击数
+    DayHitsCount = int()
+    # 总收藏数
+    FavCount = int()
+    # 总推荐数
+    PushCount = int()
+    # 总点击数
+    TotalHitsCount = int()
 
     def __init__(self, id):
         self.id = id
-        pass
 
     def get_info(self) -> dict:
 
@@ -58,7 +68,6 @@ class Novel:
             elif i == 4:
                 self.all_length = j.split('：')[1]
 
-
         # 获取小说简介
         novel_desc = soup.find_all('span')
         for i in range(0, len(novel_desc)):
@@ -81,6 +90,27 @@ class Novel:
         # 获取小说目录
         # self.get_catalog()
 
+        # 获取小说推荐数据
+        detail_url = data.detail_path
+        detail_post = data.detail_post.format(self.id)
+        response = requests.post(
+            url=detail_url,
+            data={
+                "request": encode_base64(detail_post)
+            },
+            headers=wenku8.data.header
+        )
+        metadata = xml_to_dict(response.text)
+        for i in metadata['metadata']['data']:
+            if i['@name'] == 'DayHitsCount':
+                self.DayHitsCount = int(i['@value'])
+            elif i['@name'] == 'TotalHitsCount':
+                self.TotalHitsCount = int(i['@value'])
+            elif i['@name'] == 'PushCount':
+                self.PushCount = int(i['@value'])
+            elif i['@name'] == 'FavCount':
+                self.FavCount = int(i['@value'])
+
         res["status"] = True
         res["info"] = "获取小说信息成功"
         res["novel"] = self.__dict__
@@ -101,7 +131,6 @@ class Novel:
         res = list()
         catalog_url = wenku8.data.url + data.catalog_path
         catalog_url = catalog_url.format(self.id)
-        print(catalog_url)
         response = requests.get(
             url=catalog_url,
             headers=wenku8.data.header,

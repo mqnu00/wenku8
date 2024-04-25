@@ -129,8 +129,20 @@ class Novel:
             "chapter_id": int()
         }
         res = list()
-        catalog_url = wenku8.data.url + data.catalog_path
-        catalog_url = catalog_url.format(self.id)
+        # 访问小说主页
+        novel_info_url = wenku8.data.url + data.info_path
+        novel_info_url = novel_info_url.format(self.id)
+        response = requests.get(
+            url=novel_info_url,
+            headers=wenku8.data.header,
+            timeout=10
+        )
+        soup = BeautifulSoup(response.content, 'html.parser')
+        catalog_url = soup.find_all('a')
+        for i in catalog_url:
+            if i.text == '小说目录':
+                catalog_url = wenku8.data.url + i['href']
+                break
         response = requests.get(
             url=catalog_url,
             headers=wenku8.data.header,
@@ -163,7 +175,6 @@ class Novel:
 
 
 if __name__ == '__main__':
-    novel = Novel()
-    novel.id = 1973
+    novel = Novel(20)
     res = novel.get_catalog()
-    print(res)
+    pprint.pprint(res)

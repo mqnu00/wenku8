@@ -31,6 +31,23 @@ class Novel:
     def __init__(self, id):
         self.id = id
 
+    def get_ident(self):
+        # 访问小说主页
+        novel_info_url = wenku8.data.url + data.info_path
+        novel_info_url = novel_info_url.format(self.id)
+        response = requests.get(
+            url=novel_info_url,
+            headers=wenku8.data.header,
+            timeout=10
+        )
+        soup = BeautifulSoup(response.content, 'html.parser')
+        catalog_url = soup.find_all('a')
+        for i in catalog_url:
+            if i.text == '小说目录':
+                catalog_url = wenku8.data.url + i['href']
+                break
+        return catalog_url.split('/')[4]
+
     def get_info(self) -> dict:
 
         res = {
@@ -129,20 +146,8 @@ class Novel:
             "chapter_id": int()
         }
         res = list()
-        # 访问小说主页
-        novel_info_url = wenku8.data.url + data.info_path
-        novel_info_url = novel_info_url.format(self.id)
-        response = requests.get(
-            url=novel_info_url,
-            headers=wenku8.data.header,
-            timeout=10
-        )
-        soup = BeautifulSoup(response.content, 'html.parser')
-        catalog_url = soup.find_all('a')
-        for i in catalog_url:
-            if i.text == '小说目录':
-                catalog_url = wenku8.data.url + i['href']
-                break
+        catalog_url = wenku8.data.url + data.catalog_path
+        catalog_url = catalog_url.format(self.get_ident(), self.id)
         response = requests.get(
             url=catalog_url,
             headers=wenku8.data.header,
@@ -175,6 +180,5 @@ class Novel:
 
 
 if __name__ == '__main__':
-    novel = Novel(20)
-    res = novel.get_catalog()
-    pprint.pprint(res)
+    novel = Novel(1973)
+    print(novel.get_ident())

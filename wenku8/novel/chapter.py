@@ -1,6 +1,7 @@
 import requests
 import wenku8.data
 from wenku8.novel import data
+from wenku8.novel.novel import Novel
 from bs4 import BeautifulSoup
 
 
@@ -23,7 +24,7 @@ class Chapter:
             "chapter": None
         }
         chapter_url = wenku8.data.url + data.chapter_path
-        chapter_url = chapter_url.format(self.novel_id, self.chapter_id)
+        chapter_url = chapter_url.format(Novel(self.novel_id).get_ident(), self.novel_id, self.chapter_id)
         response = requests.get(
             url=chapter_url,
             headers=wenku8.data.header,

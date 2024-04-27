@@ -1,6 +1,6 @@
 info_path = '/book/{}.htm'
-catalog_path = '/novel/1/{}/index.htm'
-chapter_path = '/novel/1/{}/{}.htm'
+catalog_path = '/novel/{}/{}/index.htm'
+chapter_path = '/novel/{}/{}/{}.htm'
 toplist_path = '/modules/article/toplist.php?sort={}&page={}'
 detail_path = 'http://app.wenku8.com/android.php'
 detail_post = 'action=book&do=meta&aid={}&t=0'

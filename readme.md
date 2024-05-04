@@ -9,6 +9,7 @@
 - [x] 获取小说信息
 - [x] 获取小说章节内容
 - [x] 获取书籍列表
+- [ ] 多级缓存 [mqnu00/flask_caching_timeout: 学习flask_caching，实现fifo，lru等缓存淘汰策略 (github.com)](https://github.com/mqnu00/flask_caching_timeout)
 - [ ] 。。。
 
 # 运行

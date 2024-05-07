@@ -4,8 +4,20 @@ from wenku8.novel.chapter import Chapter
 from wenku8.novel.novel import Novel
 from wenku8.novel.tolist import TopList
 from wenku8.user.user import User
+from cache import Cache
 
 app = Flask(__name__)
+cache = Cache(
+    app=app,
+    config={
+    'CACHE_TYPE': 'simple',
+    'REFRESH_TYPE': 'LFU',
+    'ENABLE_TTL': True,
+    'CACHE_THRESHOLD': 5,
+    'CACHE_DEFAULT_TIMEOUT': 3
+    }
+)
+
 
 
 @app.route('/login/', methods=['POST'])
@@ -32,6 +44,7 @@ def userinfo():
 
 
 @app.route('/book/<int:id>/', methods=['GET'])
+@cache.cached()
 def get_novel_info(id):
     novel = Novel(id)
     return novel.get_info()

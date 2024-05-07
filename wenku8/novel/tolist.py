@@ -85,6 +85,8 @@ if __name__ == '__main__':
         "jieqiUserInfo": "jieqiUserId%3D1423150%2CjieqiUserName%3Dmqnu000%2CjieqiUserGroup%3D3%2CjieqiUserVip%3D0%2CjieqiUserPassword%3D96e79218965eb72c92a549dd5a330112%2CjieqiUserName_un%3Dmqnu000%2CjieqiUserHonor_un%3D%26%23x65B0%3B%26%23x624B%3B%26%23x4E0A%3B%26%23x8DEF%3B%2CjieqiUserGroupName_un%3D%26%23x666E%3B%26%23x901A%3B%26%23x4F1A%3B%26%23x5458%3B%2CjieqiUserLogin%3D1712316462",
         "jieqiVisitInfo": "jieqiUserLogin%3D1712316462%2CjieqiUserId%3D1423150"
     }
-    toplist = TopList(user, 2)
+    toplist = TopList()
+    toplist.user = user
+    toplist.type_id = 2
     toplist.request_page = 11
-    toplist.get_list()
+    print(toplist.get_list())

@@ -1,4 +1,5 @@
 import pprint
+import urllib.parse
 
 import requests
 from wenku8.novel import data
@@ -28,7 +29,7 @@ class Novel:
     # 总点击数
     TotalHitsCount = int()
 
-    def __init__(self, id):
+    def __init__(self, id: int = None):
         self.id = id
 
     def get_ident(self):
@@ -178,7 +179,60 @@ class Novel:
         self.catalog = res
         return self.get_info()
 
+    # 搜索小说
+    def search(self, content: str, cookie: dict, page: int = 1):
+
+        res = {
+            "status": True,
+            "info": "成功",
+            "res": {
+                "total_page": int(),
+                "novel_list": list()
+            }
+        }
+
+        search_url = wenku8.data.url + data.search_path
+        search_url = search_url.format(
+            str(content.encode(encoding='gb2312')).split('\'')[1].replace('\\x', '%').upper(),
+            page
+        )
+        response = requests.post(
+            url=search_url,
+            headers=wenku8.data.header,
+            cookies=cookie,
+            timeout=10,
+            allow_redirects=False
+        )
+        if response.status_code == 302:
+            novel_list = [response.headers.get('Location').split('/')[-1].split('.')[0]]
+            total_page = 1
+        else:
+            print(search_url)
+            soup = BeautifulSoup(response.content, 'html.parser')
+            total_page = soup.find('em', id='pagestats').text.split('/')[-1]
+            raw = soup.findAll('a')
+            novel_list = []
+            for i in raw:
+                try:
+                    link = str(i['href'])
+                    raw = link.split('/')
+                    if len(raw) > 2 and raw[1] == 'book':
+                        novel_list.append(raw[2].split('.')[0])
+                except KeyError:
+                    pass
+        res["res"]["total_page"] = total_page
+        res["res"]["novel_list"] = novel_list
+        return res
+
 
 if __name__ == '__main__':
-    novel = Novel(1973)
-    print(novel.get_ident())
+    novel = Novel()
+    print(novel.search(
+        # %BC%D3
+        content='人',
+        cookie={
+            "PHPSESSID": "c9d891f02890f49764254b173d7293ea",
+            "jieqiUserInfo": "jieqiUserId%3D1423150%2CjieqiUserName%3Dmqnu000%2CjieqiUserGroup%3D3%2CjieqiUserVip%3D0%2CjieqiUserPassword%3D96e79218965eb72c92a549dd5a330112%2CjieqiUserName_un%3Dmqnu000%2CjieqiUserHonor_un%3D%26%23x65B0%3B%26%23x624B%3B%26%23x4E0A%3B%26%23x8DEF%3B%2CjieqiUserGroupName_un%3D%26%23x666E%3B%26%23x901A%3B%26%23x4F1A%3B%26%23x5458%3B%2CjieqiUserLogin%3D1712316462",
+            "jieqiVisitInfo": "jieqiUserLogin%3D1712316462%2CjieqiUserId%3D1423150"
+        }
+    ))

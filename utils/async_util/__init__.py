@@ -17,7 +17,6 @@ class AsyncUtil:
             redis_conf: dict,
             num_workers: _t.Any
     ):
-        print("?????")
         self.redis_pool = ConnectionPool(host=redis_conf['host'], port=redis_conf['port'], db=redis_conf['db'])
         self.executor = ThreadPool(num_workers)
 
@@ -44,6 +43,7 @@ class AsyncUtil:
             itr = fn(*args, **kwargs)
             res = {
                 "status": False,
+                "time": int(0),
                 "total": next(itr),
                 "current": 0,
                 "value": []
@@ -51,6 +51,7 @@ class AsyncUtil:
             for i in itr:
                 res["current"] = res["current"] + 1
                 res["value"].append(i)
+                res["time"] = int(time.time())
                 value = pickle.dumps(res)
                 redis_client.set(key, value)
             res["status"] = True
@@ -80,6 +81,8 @@ class AsyncUtil:
 
 
 if __name__ == '__main__':
+    print(time.time())
+    pass
     a = AsyncUtil(
         {
             'host': '127.0.0.1',

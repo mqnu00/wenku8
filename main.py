@@ -68,5 +68,17 @@ def get_toplist():
     return toplist.get_list()
 
 
+# 搜索
+@app.route('/search/', methods=['POST'])
+def search():
+    request_data = request.json
+    novel = Novel()
+    return novel.search(
+        content=request_data.get("content"),
+        page=request_data.get("request_page"),
+        cookie=request_data.get("cookie")
+    )
+
+
 if __name__ == "__main__":
     app.run(port=5000, host="127.0.0.1", debug=True)

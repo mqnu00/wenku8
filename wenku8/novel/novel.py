@@ -221,7 +221,7 @@ class Novel:
                 except KeyError:
                     pass
         res["res"]["total_page"] = total_page
-        res["res"]["novel_list"] = novel_list
+        res["res"]["novel_list"] = list(set(novel_list))
         return res
 
 
